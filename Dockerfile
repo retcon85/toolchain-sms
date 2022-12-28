@@ -77,7 +77,8 @@ RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS
     && cp makesms/Linux/makesms /tmp/sdcc/bin \
     && cp folder2c/Linux/folder2c /tmp/sdcc/bin \
     && mkdir -p /tmp/sdcc/util \
-    && cp assets2banks/src/assets2banks.py /tmp/sdcc/util \
+    && cp assets2banks/src/assets2banks.py /tmp/sdcc/util/assets2banks \
+    && chmod +x /tmp/sdcc/util/assets2banks \
     && mkdir -p /tmp/sdcc/share/sdcc/lib/sms \
     && mkdir -p /tmp/sdcc/share/sdcc/include/sms \
     && cp crt0/crt0_sms.rel /tmp/sdcc/share/sdcc/lib/sms \
@@ -103,8 +104,9 @@ RUN apt-get update -qq \
     nano
 
 # copy devkitsms
-COPY --from=devkitsms-builder /tmp/sdcc/bin /usr/local/bin
-COPY --from=devkitsms-builder /tmp/sdcc/share /usr/local/share
+COPY --from=devkitsms-builder /tmp/sdcc/bin/* /usr/local/bin
+COPY --from=devkitsms-builder /tmp/sdcc/share/* /usr/local/share
+COPY --from=devkitsms-builder /tmp/sdcc/util/* /usr/local/bin
 
 # copy wla-dx
 COPY --from=wla-dx-builder /tmp/wla-dx/bin/* /usr/local/bin
