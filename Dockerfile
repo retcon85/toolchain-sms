@@ -104,12 +104,12 @@ RUN apt-get update -qq \
     nano
 
 # copy devkitsms
-COPY --from=devkitsms-builder /tmp/sdcc/bin/* /usr/local/bin
-COPY --from=devkitsms-builder /tmp/sdcc/share/* /usr/local/share
-COPY --from=devkitsms-builder /tmp/sdcc/util/* /usr/local/bin
+COPY --from=devkitsms-builder /tmp/sdcc/bin/ /usr/local/bin/
+COPY --from=devkitsms-builder /tmp/sdcc/share/ /usr/local/share/
+COPY --from=devkitsms-builder /tmp/sdcc/util/ /usr/local/bin/
 
 # copy wla-dx
-COPY --from=wla-dx-builder /tmp/wla-dx/bin/* /usr/local/bin
+COPY --from=wla-dx-builder /tmp/wla-dx/bin/* /usr/local/bin/
 
 RUN useradd -m sms-tk
 USER sms-tk
