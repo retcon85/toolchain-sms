@@ -1,18 +1,18 @@
 # Overview
 
-The `toolkit-sms` Docker image provides a common set of tools for game development for the Sega Master System.
+The `toolchain-sms` Docker image provides a common set of tools for game development for the Sega Master System.
 
 It has been created as part of the [Retcon85](https://github.com/retcon85) project.
 
 # Source
 
-https://github.com/retcon85/toolkit-sms
+https://github.com/retcon85/toolchain-sms
 
 # Usage
 
 ## Pulling the image
 
-`docker pull retcon85/toolkit-sms`
+`docker pull retcon85/toolchain-sms`
 
 ## Using a shell alias / function (recommended)
 
@@ -25,7 +25,7 @@ Running native Docker commands is verbose. We recommend you set up a shell funct
 export SMS_HOME="/Users/<your_username>/<your-sms-projects-folder>/"
 function sms() {
   TMPVAR=$@;
-  docker run --rm -it -v $SMS_HOME:/home/sms-tk/host/$SMS_HOME -w /home/sms-tk/host/$(pwd) retcon85/toolkit-sms -c $TMPVAR
+  docker run --rm -it -v $SMS_HOME:/home/sms-tk/host/$SMS_HOME -w /home/sms-tk/host/$(pwd) retcon85/toolchain-sms -c $TMPVAR
 }
 ```
 
@@ -37,21 +37,21 @@ We recommend setting an `SMS_HOME` or similar variable, to point to a "root" loc
 
 ## Running directly as a tool wrapper (verbose)
 
-`docker run --rm -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolkit-sms -c 'tool_command_here'`
+`docker run --rm -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolchain-sms -c 'tool_command_here'`
 
 e.g. if you want to run GNU `make build` in the current working directory, you might run:
 
-`docker run --rm -v $(pwd):/home/sms-tk/host -w /home/sms-tk/host retcon85/toolkit-sms -c 'make build'`
+`docker run --rm -v $(pwd):/home/sms-tk/host -w /home/sms-tk/host retcon85/toolchain-sms -c 'make build'`
 
 ## Running as an interactive shell (not recommended)
 
-`docker run --rm -it retcon85/toolkit-sms`
+`docker run --rm -it retcon85/toolchain-sms`
 
 This will run the docker image interactively to the bash shell. You can run any of the tools from there directly.
 
 If you want access to files (likely), you will need to mount a volume, i.e.
 
-`docker run --rm -it -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolkit-sms`
+`docker run --rm -it -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolchain-sms`
 
 We don't recommend running the image as an interactive shell, because it can get confusing, and also your shell won't have access to resources on your host environment in the same way that your host shell does.
 
