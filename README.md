@@ -117,15 +117,15 @@ SDCC is required by [DevkitSMS](#DevkitSMS).
 /usr/local/bin (included in $PATH):
 
 as2gbmap      sdas6808    sdcdb.el     serialview  sstm8          ucsim_mos6502
-assets2banks  sdas8051    sdcdbsrc.el  shc08       stlcs          ucsim_p1516
-folder2c      sdasgb      sdcpp        sm6800      sxa            ucsim_pblaze
-ihx2sms       sdaspdk13   sdld         sm6809      sz80           ucsim_pdk
-makebin       sdaspdk14   sdld6808     sm68hc08    ucsim_51       ucsim_rxk
-makesms       sdaspdk15   sdldgb       sm68hc11    ucsim_avr      ucsim_st7
-packihx       sdasrab     sdldpdk      smos6502    ucsim_hc08     ucsim_stm8
-s51           sdasstm8    sdldstm8     sp1516      ucsim_m6800    ucsim_tlcs
-savr          sdastlcs90  sdldz80      spblaze     ucsim_m6809    ucsim_xa
-sdar          sdasz80     sdnm         spdk        ucsim_m68hc08  ucsim_z80
+sdas8051      sdcdbsrc.el shc08        stlcs       ucsim_p1516    ucsim_rxk
+sdasgb        sdcpp       sm6800       sxa         ucsim_pblaze   ucsim_stm8
+sdaspdk13     sdld        sm6809       sz80        ucsim_pdk      ucsim_tlcs
+makebin       sdaspdk14   sdld6808     sm68hc08    ucsim_51       ucsim_xa
+sdaspdk15     sdldgb      sm68hc11     ucsim_avr   ucsim_st7      ucsim_z80
+packihx       sdasrab     sdldpdk      smos6502    ucsim_hc08
+s51           sdasstm8    sdldstm8     sp1516      ucsim_m6800
+savr          sdastlcs90  sdldz80      spblaze     ucsim_m6809
+sdar          sdasz80     sdnm         spdk        ucsim_m68hc08
 sdas390       sdcc        sdobjcopy    srxk        ucsim_m68hc11
 sdas6500      sdcdb       sdranlib     sst7        ucsim_mcs6502
 ```

@@ -89,6 +89,16 @@ RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS
     && cp PSGlib/src/PSGlib.h /tmp/sdcc/share/sdcc/include/sms
 
 # ----------------------------- #
+# retcon utils                  #
+# ----------------------------- #
+FROM smstk-builder-base AS retcon-utils-builder
+WORKDIR /tmp
+RUN mkdir -p local/bin
+RUN git clone --branch v0.2 --single-branch https://github.com/retcon85/retcon-util-sms.git
+RUN cp retcon-util-sms/img2tiles.py local/bin/img2tiles \
+    && chmod +x local/bin/img2tiles
+
+# ----------------------------- #
 # final image compilation       #
 # ----------------------------- #
 
@@ -110,6 +120,9 @@ COPY --from=devkitsms-builder /tmp/sdcc/util/ /usr/local/bin/
 
 # copy wla-dx
 COPY --from=wla-dx-builder /tmp/wla-dx/bin/* /usr/local/bin/
+
+# copy retcon-utils
+COPY --from=retcon-utils-builder /tmp/local/bin/* /usr/local/bin/
 
 RUN useradd -m sms-tk
 USER sms-tk
