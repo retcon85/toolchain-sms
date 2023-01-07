@@ -1,0 +1,4 @@
+function sms() {
+  TMPVAR=$@;
+  docker run --rm -v $RETCON_HOME:/home/root/host/$RETCON_HOME -w /home/root/host/$(pwd) retcon85/toolchain-sms -c $TMPVAR
+}

@@ -124,6 +124,11 @@ COPY --from=wla-dx-builder /tmp/wla-dx/bin/* /usr/local/bin/
 # copy retcon-utils
 COPY --from=retcon-utils-builder /tmp/local/bin/* /usr/local/bin/
 
+# copy misc docker image utils
+COPY ./export-h.sh /usr/local/bin/export-h
+RUN chmod +x /usr/local/bin/export-h
+COPY ./zsh-function /home/sms-tk/
+
 RUN useradd -m sms-tk
 USER sms-tk
 
