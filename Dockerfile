@@ -94,7 +94,7 @@ RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS
 FROM smstk-builder-base AS retcon-utils-builder
 WORKDIR /tmp
 RUN mkdir -p local/bin
-RUN git clone --branch v0.2 --single-branch https://github.com/retcon85/retcon-util-sms.git
+RUN git clone --branch v0.3 --single-branch https://github.com/retcon85/retcon-util-sms.git
 RUN cp retcon-util-sms/img2tiles.py local/bin/img2tiles \
     && chmod +x local/bin/img2tiles
 
