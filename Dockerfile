@@ -8,6 +8,7 @@ FROM python:3.11.0 AS smstk-base
 # common tools                  #
 # ----------------------------- #
 
+#!TODO: install cmake on base (generally consolidate tools)!
 RUN apt-get update -qq \
  && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     ca-certificates \
@@ -64,11 +65,13 @@ RUN git clone --branch v10.3 --single-branch https://github.com/vhelin/wla-dx.gi
 FROM smstk-builder-base AS devkitsms-builder
 
 WORKDIR /tmp
-RUN curl -o sdcc-src-4.2.0.tar.bz2 -L "https://downloads.sourceforge.net/project/sdcc/sdcc/4.2.0/sdcc-src-4.2.0.tar.bz2" \
-    && tar -xvjf sdcc-src-4.2.0.tar.bz2 \
-    && cd sdcc-4.2.0 \
+RUN curl -o sdcc-src-20230127-13827.tar.bz2 -L "https://downloads.sourceforge.net/project/sdcc/snapshot_builds/sdcc-src/sdcc-src-20230127-13827.tar.bz2" \
+    && tar -xvjf sdcc-src-20230127-13827.tar.bz2 \
+    && mv sdcc sdcc-snapshot \
+    && cd sdcc-snapshot \
     && ./configure --disable-pic14-port --disable-pic16-port \
-    && make \
+    && make -j 4
+RUN cd sdcc-snapshot \
     && make install prefix=/tmp/sdcc
 RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS.git \
     && cd devkitSMS \
@@ -76,9 +79,8 @@ RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS
     && cp ihx2sms/Linux/ihx2sms /tmp/sdcc/bin \
     && cp makesms/Linux/makesms /tmp/sdcc/bin \
     && cp folder2c/Linux/folder2c /tmp/sdcc/bin \
-    && mkdir -p /tmp/sdcc/util \
-    && cp assets2banks/src/assets2banks.py /tmp/sdcc/util/assets2banks \
-    && chmod +x /tmp/sdcc/util/assets2banks \
+    && cp assets2banks/src/assets2banks.py /tmp/sdcc/bin/assets2banks \
+    && chmod +x /tmp/sdcc/bin/assets2banks \
     && mkdir -p /tmp/sdcc/share/sdcc/lib/sms \
     && mkdir -p /tmp/sdcc/share/sdcc/include/sms \
     && cp crt0/crt0_sms.rel /tmp/sdcc/share/sdcc/lib/sms \
@@ -114,9 +116,7 @@ RUN apt-get update -qq \
     nano
 
 # copy devkitsms
-COPY --from=devkitsms-builder /tmp/sdcc/bin/ /usr/local/bin/
-COPY --from=devkitsms-builder /tmp/sdcc/share/ /usr/local/share/
-COPY --from=devkitsms-builder /tmp/sdcc/util/ /usr/local/bin/
+COPY --from=devkitsms-builder /tmp/sdcc/ /usr/local/
 
 # copy wla-dx
 COPY --from=wla-dx-builder /tmp/wla-dx/bin/* /usr/local/bin/
