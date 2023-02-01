@@ -85,6 +85,7 @@ RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS
     && mkdir -p /tmp/sdcc/share/sdcc/include/sms \
     && cp crt0/crt0_sms.rel /tmp/sdcc/share/sdcc/lib/sms \
     && cp SMSlib/SMSlib.lib /tmp/sdcc/share/sdcc/lib/sms \
+    && cp SMSlib/SMSlib_GG.lib /tmp/sdcc/share/sdcc/lib/sms \
     && cp SMSlib/src/SMSlib.h /tmp/sdcc/share/sdcc/include/sms \
     && cp SMSlib/src/peep-rules.txt /tmp/sdcc/share/sdcc/lib/sms \
     && cp PSGlib/PSGlib.rel /tmp/sdcc/share/sdcc/lib/sms \
