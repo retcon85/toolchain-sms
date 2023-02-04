@@ -92,14 +92,25 @@ RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS
     && cp PSGlib/src/PSGlib.h /tmp/sdcc/share/sdcc/include/sms
 
 # ----------------------------- #
-# retcon utils                  #
+# utils                         #
 # ----------------------------- #
-FROM smstk-builder-base AS retcon-utils-builder
+FROM smstk-builder-base AS utils-builder
 WORKDIR /tmp
 RUN mkdir -p local/bin
+
+# img2tiles python script
 RUN git clone --branch v0.3 --single-branch https://github.com/retcon85/retcon-util-sms.git
 RUN cp retcon-util-sms/img2tiles.py local/bin/img2tiles \
     && chmod +x local/bin/img2tiles
+
+# psglib tools
+RUN git clone --branch master --single-branch https://github.com/sverx/PSGlib.git \
+    && cd PSGlib \
+    && git checkout 88346ee7620b750564008cffb54728da3ddc114e \
+    && cd tools/src \
+    && gcc -o /tmp/local/bin/psgcomp psgcomp.c \
+    && gcc -o /tmp/local/bin/psgdecomp psgdecomp.c \
+    && gcc -o /tmp/local/bin/vgm2psg vgm2psg.c -lz
 
 # ----------------------------- #
 # final image compilation       #
@@ -123,7 +134,7 @@ COPY --from=devkitsms-builder /tmp/sdcc/ /usr/local/
 COPY --from=wla-dx-builder /tmp/wla-dx/bin/* /usr/local/bin/
 
 # copy retcon-utils
-COPY --from=retcon-utils-builder /tmp/local/bin/* /usr/local/bin/
+COPY --from=utils-builder /tmp/local/bin/* /usr/local/bin/
 
 # copy misc docker image utils
 COPY ./export-h.sh /usr/local/bin/export-h
