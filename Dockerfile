@@ -75,7 +75,7 @@ RUN cd sdcc-snapshot \
     && make install prefix=/tmp/sdcc
 RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS.git \
     && cd devkitSMS \
-    && git checkout 1688872ca0576ab765a0f7904a93ba0fd391f66a \
+    && git checkout 86784470529f2c87428b5126e2be25e2e9d91ea6 \
     && cp ihx2sms/Linux/ihx2sms /tmp/sdcc/bin \
     && cp makesms/Linux/makesms /tmp/sdcc/bin \
     && cp folder2c/Linux/folder2c /tmp/sdcc/bin \
@@ -111,6 +111,11 @@ RUN git clone --branch master --single-branch https://github.com/sverx/PSGlib.gi
     && gcc -o /tmp/local/bin/psgcomp psgcomp.c \
     && gcc -o /tmp/local/bin/psgdecomp psgdecomp.c \
     && gcc -o /tmp/local/bin/vgm2psg vgm2psg.c -lz
+
+# retcon-util-audio
+RUN curl -o retcon-audio-0.0.5-linux-amd64 -L "https://github.com/retcon85/retcon-util-audio/releases/download/0.0.5/retcon-audio-0.0.5-linux-amd64.bz2" \
+    && tar -xvjf retcon-audio-0.0.5-linux-amd64 \
+    && mv ./retcon-audio local/bin
 
 # ----------------------------- #
 # final image compilation       #
