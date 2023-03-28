@@ -75,7 +75,7 @@ RUN cd sdcc-snapshot \
     && make install prefix=/tmp/sdcc
 RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS.git \
     && cd devkitSMS \
-    && git checkout 86784470529f2c87428b5126e2be25e2e9d91ea6 \
+    && git checkout e8e936b2ff5b1460a7d0c53f231261c012c9cd58 \
     && cp ihx2sms/Linux/ihx2sms /tmp/sdcc/bin \
     && cp makesms/Linux/makesms /tmp/sdcc/bin \
     && cp folder2c/Linux/folder2c /tmp/sdcc/bin \
