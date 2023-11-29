@@ -52,7 +52,7 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --branch v10.3 --single-branch https://github.com/vhelin/wla-dx.git && \
+RUN git clone --branch v10.6 --single-branch https://github.com/vhelin/wla-dx.git && \
     cd wla-dx && \
     mkdir build && cd build && \
     cmake .. && \
@@ -65,17 +65,16 @@ RUN git clone --branch v10.3 --single-branch https://github.com/vhelin/wla-dx.gi
 FROM smstk-builder-base AS devkitsms-builder
 
 WORKDIR /tmp
-RUN curl -o sdcc-src-20230127-13827.tar.bz2 -L "https://downloads.sourceforge.net/project/sdcc/snapshot_builds/sdcc-src/sdcc-src-20230127-13827.tar.bz2" \
-    && tar -xvjf sdcc-src-20230127-13827.tar.bz2 \
-    && mv sdcc sdcc-snapshot \
-    && cd sdcc-snapshot \
+RUN curl -o sdcc-src-4.3.0.tar.bz2 -L "https://downloads.sourceforge.net/project/sdcc/sdcc/4.3.0/sdcc-src-4.3.0.tar.bz2" \
+    && tar -xvjf sdcc-src-4.3.0.tar.bz2 \
+    && cd sdcc-4.3.0 \
     && ./configure --disable-pic14-port --disable-pic16-port \
     && make -j 4
-RUN cd sdcc-snapshot \
+RUN cd sdcc-4.3.0 \
     && make install prefix=/tmp/sdcc
 RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS.git \
     && cd devkitSMS \
-    && git checkout e8e936b2ff5b1460a7d0c53f231261c012c9cd58 \
+    && git checkout 76914212dca42cffb522c4553dd28f0f5ca933a9 \
     && cp ihx2sms/Linux/ihx2sms /tmp/sdcc/bin \
     && cp makesms/Linux/makesms /tmp/sdcc/bin \
     && cp folder2c/Linux/folder2c /tmp/sdcc/bin \
