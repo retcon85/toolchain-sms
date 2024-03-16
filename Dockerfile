@@ -74,10 +74,20 @@ RUN cd sdcc-4.3.0 \
     && make install prefix=/tmp/sdcc
 RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS.git \
     && cd devkitSMS \
-    && git checkout 76914212dca42cffb522c4553dd28f0f5ca933a9 \
-    && cp ihx2sms/Linux/ihx2sms /tmp/sdcc/bin \
-    && cp makesms/Linux/makesms /tmp/sdcc/bin \
-    && cp folder2c/Linux/folder2c /tmp/sdcc/bin \
+    && git checkout e45cd4fef50be9aa61c69df4bed566202b46f647 \
+    && cd ihx2sms \
+    && mkdir build \
+    && gcc -o build/ihx2sms src/ihx2sms.c \
+    && cp build/ihx2sms /tmp/sdcc/bin \
+    && cd ../makesms \
+    && mkdir build \
+    && gcc -o build/makesms src/makesms.c \
+    && cp build/makesms /tmp/sdcc/bin \
+    && cd ../folder2c \
+    && mkdir build \
+    && gcc -o build/folder2c src/folder2c.c \
+    && cp build/folder2c /tmp/sdcc/bin \
+    && cd .. \
     && cp assets2banks/src/assets2banks.py /tmp/sdcc/bin/assets2banks \
     && chmod +x /tmp/sdcc/bin/assets2banks \
     && mkdir -p /tmp/sdcc/share/sdcc/lib/sms \
@@ -111,9 +121,11 @@ RUN git clone --branch master --single-branch https://github.com/sverx/PSGlib.gi
     && gcc -o /tmp/local/bin/psgdecomp psgdecomp.c \
     && gcc -o /tmp/local/bin/vgm2psg vgm2psg.c -lz
 
+ARG TARGETOS
+ARG TARGETARCH
 # retcon-util-audio
-RUN curl -o retcon-audio-0.0.5-linux-amd64 -L "https://github.com/retcon85/retcon-util-audio/releases/download/0.0.5/retcon-audio-0.0.5-linux-amd64.bz2" \
-    && tar -xvjf retcon-audio-0.0.5-linux-amd64 \
+RUN curl -o retcon-audio-0.0.5-${TARGETOS}-${TARGETARCH} -L "https://github.com/retcon85/retcon-util-audio/releases/download/0.0.5/retcon-audio-0.0.5-${TARGETOS}-${TARGETARCH}.bz2" \
+    && tar -xvjf retcon-audio-0.0.5-${TARGETOS}-${TARGETARCH} \
     && mv ./retcon-audio local/bin
 
 # ----------------------------- #
@@ -143,12 +155,12 @@ COPY --from=utils-builder /tmp/local/bin/* /usr/local/bin/
 # copy misc docker image utils
 COPY ./export-h.sh /usr/local/bin/export-h
 RUN chmod +x /usr/local/bin/export-h
-COPY ./zsh-function /home/sms-tk/
+COPY ./zsh-function /home/retcon/
 
-RUN useradd -m sms-tk
-USER sms-tk
+RUN useradd -m retcon
+USER retcon
 
-WORKDIR /home/sms-tk
-ENV HOME=/home/sms-tk
+WORKDIR /home/retcon
+ENV HOME=/home/retcon
 
 ENTRYPOINT [ "/bin/bash" ]

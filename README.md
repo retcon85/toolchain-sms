@@ -55,6 +55,13 @@ If you want access to files (likely), you will need to mount a volume, i.e.
 
 We don't recommend running the image as an interactive shell, because it can get confusing, and also your shell won't have access to resources on your host environment in the same way that your host shell does.
 
+# Building the image from source
+
+You can use the `docker build` or the `docker buildx` command to build the image for your own purposes. The latter supports non-native architectures. See the docker documentation for more info.
+
+e.g. `docker build .`
+or `docker build -t YOUR_TAG_NAME .`
+
 # Contents
 
 ## Base image
