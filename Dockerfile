@@ -65,16 +65,16 @@ RUN git clone --branch v10.6 --single-branch https://github.com/vhelin/wla-dx.gi
 FROM smstk-builder-base AS devkitsms-builder
 
 WORKDIR /tmp
-RUN curl -o sdcc-src-4.3.0.tar.bz2 -L "https://downloads.sourceforge.net/project/sdcc/sdcc/4.3.0/sdcc-src-4.3.0.tar.bz2" \
-    && tar -xvjf sdcc-src-4.3.0.tar.bz2 \
-    && cd sdcc-4.3.0 \
+RUN curl -o sdcc-src-4.4.0.tar.bz2 -L "https://downloads.sourceforge.net/project/sdcc/sdcc/4.4.0/sdcc-src-4.4.0.tar.bz2" \
+    && tar -xvjf sdcc-src-4.4.0.tar.bz2 \
+    && cd sdcc-4.4.0 \
     && ./configure --disable-pic14-port --disable-pic16-port \
     && make -j 4
-RUN cd sdcc-4.3.0 \
+RUN cd sdcc-4.4.0 \
     && make install prefix=/tmp/sdcc
 RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS.git \
     && cd devkitSMS \
-    && git checkout e45cd4fef50be9aa61c69df4bed566202b46f647 \
+    && git checkout cc6008a2fa5ba6f66475369d84f0b30c6993454cdo \
     && cd ihx2sms \
     && mkdir build \
     && gcc -o build/ihx2sms src/ihx2sms.c \
@@ -97,7 +97,8 @@ RUN git clone --branch master --single-branch https://github.com/sverx/devkitSMS
     && cp SMSlib/SMSlib_GG.lib /tmp/sdcc/share/sdcc/lib/sms \
     && cp SMSlib/src/SMSlib.h /tmp/sdcc/share/sdcc/include/sms \
     && cp SMSlib/src/peep-rules.txt /tmp/sdcc/share/sdcc/lib/sms \
-    && cp PSGlib/PSGlib.rel /tmp/sdcc/share/sdcc/lib/sms \
+    && cp PSGlib/PSGlib.lib /tmp/sdcc/share/sdcc/lib/sms \
+    && cp PSGlib/PSGlib.lib /tmp/sdcc/share/sdcc/lib/sms/PSGlib.rel \
     && cp PSGlib/src/PSGlib.h /tmp/sdcc/share/sdcc/include/sms
 
 # ----------------------------- #
@@ -162,5 +163,8 @@ USER retcon
 
 WORKDIR /home/retcon
 ENV HOME=/home/retcon
+USER root
+RUN chown -R retcon .
+USER retcon
 
 ENTRYPOINT [ "/bin/bash" ]
