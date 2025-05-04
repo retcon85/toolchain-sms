@@ -10,11 +10,25 @@ https://github.com/retcon85/toolchain-sms
 
 # Usage
 
-## Pulling the image
+## As a Visual Studio Code devcontainer (recommended)
+
+This image works great as a Visual Studio Code devcontainer. If you've never used a devcontainer before, you're in for a treat! Devcontainers let you run Visual Studio Code in a container isolated mode where all terminals by default will run inside a Docker container.
+
+For an example of how to set this up, please refer to the `.devcontainer` project inside the [quickstart-sms-devkitsms repo](https://github.com/retcon85/quickstart-sms-devkitsms/tree/main/.devcontainer).
+
+## Pulling the image directly
 
 `docker pull retcon85/toolchain-sms`
 
-## Using a shell alias / function (recommended)
+## Running directly as a tool wrapper
+
+`docker run --rm -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolchain-sms 'tool_command_here'`
+
+e.g. if you want to run GNU `make build` in the current working directory, you might run:
+
+`docker run --rm -v $(pwd):/home/sms-tk/host -w /home/sms-tk/host retcon85/toolchain-sms 'make build'`
+
+## Using a shell alias / function
 
 Running native Docker commands is verbose. We recommend you set up a shell function to allow you to wrap container commands with a simple prefix. Here are some example instructions for the zsh shell. Steps for the bash shell are very similar.
 
@@ -35,32 +49,21 @@ function sms() {
 We recommend setting an `SMS_HOME` or similar variable, to point to a "root" location your projects will always be inside. This is because Docker cannot leave the context in which it is running, so you can't use so many `..` path segments that you leave the context.
 
 
-## Running directly as a tool wrapper (verbose)
+## Running as an interactive shell
 
-`docker run --rm -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolchain-sms -c 'tool_command_here'`
-
-e.g. if you want to run GNU `make build` in the current working directory, you might run:
-
-`docker run --rm -v $(pwd):/home/sms-tk/host -w /home/sms-tk/host retcon85/toolchain-sms -c 'make build'`
-
-## Running as an interactive shell (not recommended)
-
-`docker run --rm -it retcon85/toolchain-sms`
+`docker run --rm -it retcon85/toolchain-sms /bin/bash`
 
 This will run the docker image interactively to the bash shell. You can run any of the tools from there directly.
 
 If you want access to files (likely), you will need to mount a volume, i.e.
 
-`docker run --rm -it -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolchain-sms`
+`docker run --rm -it -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolchain-sms /bin/bash`
 
 We don't recommend running the image as an interactive shell, because it can get confusing, and also your shell won't have access to resources on your host environment in the same way that your host shell does.
 
 # Building the image from source
 
-You can use the `docker build` or the `docker buildx` command to build the image for your own purposes. The latter supports non-native architectures. See the docker documentation for more info.
-
-e.g. `docker build .`
-or `docker build -t YOUR_TAG_NAME .`
+Run `./build.sh`
 
 # Contents
 
@@ -74,14 +77,15 @@ The base image supplies Python 3 as well as many common software development too
 
 It is distributed under the [GPL 2.0 or later licence](https://spdx.org/licenses/GPL-2.0-or-later.html).
 
-### Executables
+**You can switch between versions of WLA-DX by running the `use-wla-dx` command.**
+
+### Executables (dependent on active version)
 
 ```
-/usr/local/bin (included in $PATH):
+/opt/wla-dx/bin (included in $PATH):
 
-wla-6502   wla-65ce02  wla-6809  wla-gb       wla-superfx  wlalink
-wla-65816  wla-6800    wla-8008  wla-huc6280  wla-z80
-wla-65c02  wla-6801    wla-8080  wla-spc700   wlab
+wla-6502   wla-65c02   wla-6800   wla-6801  wla-8008  wla-gb       wla-spc700   wla-z80   wlab
+wla-65816  wla-65ce02  wla-68000  wla-6809  wla-8080  wla-huc6280  wla-superfx  wla-z80n  wlalink
 ```
 
 ## DevkitSMS
@@ -90,24 +94,24 @@ wla-65c02  wla-6801    wla-8080  wla-spc700   wlab
 
 It is distributed under numerous (mostly permissive) licenses - see [here](https://github.com/sverx/devkitSMS/blob/master/LICENSES.txt) for more details.
 
-## Executables
+### Executables (dependent on active version)
 
 ```
-/usr/local/bin (included in $PATH):
+/opt/devkitsms/bin (included in $PATH):
 
-assets2banks  ihx2sms    folder2c      makesms
+assets2banks  folder2c  ihx2sms  makesms
 ```
 
-## Other resources
+### Other resources
 
 ```
-/usr/local/share/sdcc/include/sms:
+/opt/devkitsms/include:
 
 PSGlib.h  SMSlib.h
 
-/usr/local/share/sdcc/lib/sms:
+/opt/devkitsms/lib:
 
-PSGlib.rel  SMSlib.lib  crt0_sms.rel  peep-rules.txt
+PSGlib.lib  SMSlib.lib  SMSlib_GG.lib  crt0_sms.rel  peep-rules.txt
 ```
 
 ## SDCC
@@ -118,28 +122,51 @@ It is distributed under numerous licenses - see [here](https://sdcc.sourceforge.
 
 SDCC is required by [DevkitSMS](#DevkitSMS).
 
-## Executables
+**You can switch between versions of SDCC by running the `use-sdcc` command.**
+
+### Executables (dependent on active version)
 
 ```
-/usr/local/bin (included in $PATH):
+/opt/sdcc/bin (included in $PATH):
 
-as2gbmap      sdas6808    sdcdb.el     serialview  sstm8          ucsim_mos6502
-sdas8051      sdcdbsrc.el shc08        stlcs       ucsim_p1516    ucsim_rxk
-sdasgb        sdcpp       sm6800       sxa         ucsim_pblaze   ucsim_stm8
-sdaspdk13     sdld        sm6809       sz80        ucsim_pdk      ucsim_tlcs
-makebin       sdaspdk14   sdld6808     sm68hc08    ucsim_51       ucsim_xa
-sdaspdk15     sdldgb      sm68hc11     ucsim_avr   ucsim_st7      ucsim_z80
-packihx       sdasrab     sdldpdk      smos6502    ucsim_hc08
-s51           sdasstm8    sdldstm8     sp1516      ucsim_m6800
-savr          sdastlcs90  sdldz80      spblaze     ucsim_m6809
-sdar          sdasz80     sdnm         spdk        ucsim_m68hc08
-sdas390       sdcc        sdobjcopy    srxk        ucsim_m68hc11
-sdas6500      sdcdb       sdranlib     sst7        ucsim_mcs6502
+as2gbmap  sdar      sdas8051   sdaspdk15   sdasz80   sdcdbsrc.el  sdldgb    sdnm        ucsim_51     ucsim_m6800    ucsim_m68hc12  ucsim_pdk   ucsim_tlcs
+makebin   sdas390   sdasgb     sdasrab     sdcc      sdcpp        sdldpdk   sdobjcopy   ucsim_avr    ucsim_m6809    ucsim_mos6502  ucsim_rxk   ucsim_xa
+packihx   sdas6500  sdaspdk13  sdasstm8    sdcdb     sdld         sdldstm8  sdranlib    ucsim_f8     ucsim_m68hc08  ucsim_p1516    ucsim_st7   ucsim_z80
+s51       sdas6808  sdaspdk14  sdastlcs90  sdcdb.el  sdld6808     sdldz80   serialview  ucsim_i8085  ucsim_m68hc11  ucsim_pblaze   ucsim_stm8
 ```
 
-## Other resources
+### Other resources
 
 ```
-/usr/local/share/sdcc/include/* (except sms folder - see above)
-/usr/local/share/sdcc/lib/* (except sms folder - see above)
+/opt/sdcc/share/sdcc/include/*
+/opt/sdcc/share/sdcc/lib/*
 ```
+
+## Version switching
+
+Some tools have multiple versions installed.
+
+- You can switch between versions of WLA-DX by running the `use-wla-dx` command.
+- You can switch between versions of SDCC by running the `use-sdcc` command.
+
+Version switching is achieved through symlinks.
+
+## Variants
+
+There is a "slim" variant of the image, which is slightly smaller in terms of image size and should work for most if not all projects. We recommend using the slim variant unless you find that it doesn't support your needs.
+
+# Changelog
+
+## v1.0
+
+- **Added `-c` to entrypoint**
+- **Changed image user from `retcon` to `root`**
+- **Upgrade to Python 3.13 from 3.11**
+- Standardize on `bookworm` base image
+- Install `gcc` on base image
+- Moved WLA-DX location from `/usr/local/...` to `/opt/wla-dx/...`
+- Added multiple versions of WLA-DX (10.5 and 10.6)
+- Moved SDCC location from `/usr/local/...` to `/opt/sdcc/...`
+- Added multiple versions of SDCC (4.3, 4.4 and 4.5)
+- Moved devkitsms location from `/usr/local/...` to `/opt/devkitsms/...`
+- Latest devkitsms snapshot (`1d65541a11800aa688d8649c4a393282717e2e5f`)
