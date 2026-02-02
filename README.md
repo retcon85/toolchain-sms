@@ -172,3 +172,7 @@ Possible breaking changes **in bold**.
 - Added multiple versions of SDCC (4.3, 4.4 and 4.5)
 - Moved devkitsms location from `/usr/local/...` to `/opt/devkitsms/...`
 - Latest devkitsms snapshot (`1d65541a11800aa688d8649c4a393282717e2e5f`)
+
+## v1.1
+
+- Latest devkitsms snapshot (`8ce5a743b9709d9712e6fc28b8e9a2adae73c868`)

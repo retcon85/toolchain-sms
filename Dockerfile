@@ -13,7 +13,7 @@ FROM python:${PYTHON_VERSION}-${BASE_VARIANT} AS smstk-base
 
 #!TODO: install cmake on base (generally consolidate tools)!
 RUN apt-get update -qq \
- && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     gcc \
     ca-certificates \
     clang \
@@ -25,19 +25,19 @@ RUN apt-get update -qq \
     graphviz \
     xdot \
     git \
- && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && update-ca-certificates \
- && rm -rf /var/lib/apt/lists
+    && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists
 
 FROM smstk-base AS smstk-builder-base
 
 RUN apt-get update -qq \
- && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     bison \
     flex \
     texinfo \
- && apt-get autoclean && apt-get clean && apt-get -y autoremove \
- && rm -rf /var/lib/apt/lists
+    && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+    && rm -rf /var/lib/apt/lists
 
 # ----------------------------- #
 # wla-dx assembler              #
@@ -57,7 +57,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # WLA-DX
-    # 10.5
+# 10.5
 RUN git clone --branch v10.5 --single-branch https://github.com/vhelin/wla-dx.git && \
     cd wla-dx && \
     mkdir build && cd build && \
@@ -80,7 +80,7 @@ FROM smstk-builder-base AS sdcc-builder
 WORKDIR /tmp
 
 # SDCC
-    # 4.3
+# 4.3
 RUN curl -o sdcc-src-4.3.0.tar.bz2 -L "https://downloads.sourceforge.net/project/sdcc/sdcc/4.3.0/sdcc-src-4.3.0.tar.bz2" \
     && tar -xvjf sdcc-src-4.3.0.tar.bz2 \
     && cd sdcc-4.3.0 \
@@ -119,7 +119,7 @@ RUN mkdir -p /tmp/devkitsms/bin \
     && mkdir -p /tmp/devkitsms/include \
     && git clone --branch master --single-branch https://github.com/sverx/devkitSMS.git \
     && cd devkitSMS \
-    && git checkout 1d65541a11800aa688d8649c4a393282717e2e5f \
+    && git checkout 8ce5a743b9709d9712e6fc28b8e9a2adae73c868 \
     && cd ihx2sms \
     && mkdir build \
     && gcc -o build/ihx2sms src/ihx2sms.c \
