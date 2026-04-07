@@ -182,7 +182,7 @@ Note: version switching is achieved through symlinks.
 - Using ghrc.io/retcon85/toolchain-base as intermediate base image
 - Added [zasm Z80 assembler](https://github.com/Megatokio/zasm) as bundled tool 
 - Added missing SGlib libraries from devkitsms to image
-- Latest devkitsms snapshot (`8b99400a9b046f33fc6b03708cab880af8e334cd`)
+- Latest devkitsms snapshot ([8b99400a9b046f33fc6b03708cab880af8e334cd](https://github.com/sverx/devkitSMS/commit/8b99400a9b046f33fc6b03708cab880af8e334cd))
 
 ## v2.0
 
@@ -191,11 +191,11 @@ Note: version switching is achieved through symlinks.
   - Removal of significant number of base dependencies only needed to build the image (clang, libffi-dev, libreadline-dev, libboost-all-dev, tcl-dev, graphviz, xdot)
   - Removal of non-essential additional tools (nano, xxd)
   - Miscellaneous layer optimizations
-- Latest devkitsms snapshot (`401eaded29e538c2fa3ae9be9216d58104717e9d`)
+- Latest devkitsms snapshot ([401eaded29e538c2fa3ae9be9216d58104717e9d](https://github.com/sverx/devkitSMS/commit/401eaded29e538c2fa3ae9be9216d58104717e9d))
 
 ## v1.1
 
-- Latest devkitsms snapshot (`8ce5a743b9709d9712e6fc28b8e9a2adae73c868`)
+- Latest devkitsms snapshot ([8ce5a743b9709d9712e6fc28b8e9a2adae73c868](https://github.com/sverx/devkitSMS/commit/8ce5a743b9709d9712e6fc28b8e9a2adae73c868))
 
 ## v1.0
 
