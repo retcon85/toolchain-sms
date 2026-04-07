@@ -1,5 +1,6 @@
 ARG PYTHON_VERSION="3.13"
 ARG BASE_VARIANT="bookworm"
+ARG DEVKIT_SMS_SHA="8b99400a9b046f33fc6b03708cab880af8e334cd"
 
 # ------------------------------------------------- #
 # base installs python3 for general purpose tooling #
@@ -8,23 +9,17 @@ ARG BASE_VARIANT="bookworm"
 FROM python:${PYTHON_VERSION}-${BASE_VARIANT} AS smstk-base
 
 # ----------------------------- #
-# common tools                  #
+# core runtime dependencies     #
 # ----------------------------- #
 
-#!TODO: install cmake on base (generally consolidate tools)!
 RUN apt-get update -qq \
     && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     gcc \
     ca-certificates \
-    clang \
-    curl \
-    libffi-dev \
-    libreadline-dev \
-    libboost-all-dev \
-    tcl-dev \
-    graphviz \
-    xdot \
+    make \
     git \
+    curl \
+    wget \
     && apt-get autoclean && apt-get clean && apt-get -y autoremove \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists
@@ -33,6 +28,13 @@ FROM smstk-base AS smstk-builder-base
 
 RUN apt-get update -qq \
     && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    clang \
+    libffi-dev \
+    libreadline-dev \
+    libboost-all-dev \
+    tcl-dev \
+    graphviz \
+    xdot \
     bison \
     flex \
     texinfo \
@@ -119,7 +121,7 @@ RUN mkdir -p /tmp/devkitsms/bin \
     && mkdir -p /tmp/devkitsms/include \
     && git clone --branch master --single-branch https://github.com/sverx/devkitSMS.git \
     && cd devkitSMS \
-    && git checkout 8ce5a743b9709d9712e6fc28b8e9a2adae73c868 \
+    && git checkout ${DEVKIT_SMS_SHA} \
     && cd ihx2sms \
     && mkdir build \
     && gcc -o build/ihx2sms src/ihx2sms.c \
@@ -175,48 +177,37 @@ RUN curl -o retcon-audio-0.0.5-${TARGETOS}-${TARGETARCH} -L "https://github.com/
     && mv ./retcon-audio local/bin
 
 # ----------------------------- #
-# final image compilation       #
+# FINAL IMAGE COMPILATION       #
 # ----------------------------- #
 
 FROM smstk-base
 
-# ----------------------------- #
-# add more general tools        #
-# ----------------------------- #
-
-RUN apt-get update -qq \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    xxd \
-    nano
-
 # copy sdcc & devkitsms
 COPY --from=devkitsms-builder /tmp/devkitsms/ /opt/devkitsms/
 COPY --from=devkitsms-builder /tmp/sdcc/ /opt/
-# symlink default SDCC version (4.3)
-RUN ln -s /opt/sdcc-4.3 /opt/sdcc
-# add to path
-ENV PATH=/opt/devkitsms/bin:/opt/sdcc/bin:$PATH
-
-# copy wla-dx
 COPY --from=wla-dx-builder /tmp/wla-dx /opt/
-# symlink default WLA-DX version (10.6)
-RUN ln -s /opt/wla-dx-10.6 /opt/wla-dx
-# add to path
-ENV PATH=/opt/wla-dx/bin:$PATH
-
 # copy retcon-utils
 COPY --from=utils-builder /tmp/local/bin/* /usr/local/bin/
 
 # copy misc docker image utils
 COPY ./export-h.sh /usr/local/bin/export-h
-RUN chmod +x /usr/local/bin/export-h
 COPY ./use-sdcc.sh /usr/local/bin/use-sdcc
-RUN chmod +x /usr/local/bin/use-sdcc
 COPY ./use-wla-dx.sh /usr/local/bin/use-wla-dx
-RUN chmod +x /usr/local/bin/use-wla-dx
 COPY ./zsh-function /home/retcon/
+
+# symlink default SDCC version (4.3)
+# symlink default WLA-DX version (10.6)
+# chmods
+RUN ln -s /opt/sdcc-4.3 /opt/sdcc && \
+    ln -s /opt/wla-dx-10.6 /opt/wla-dx && \
+    chmod +x /usr/local/bin/export-h && \
+    chmod +x /usr/local/bin/use-sdcc && \
+    chmod +x /usr/local/bin/use-wla-dx
+
+# add to path
+ENV PATH=/opt/devkitsms/bin:/opt/sdcc/bin:/opt/wla-dx/bin:$PATH
 
 WORKDIR /home/retcon
 ENV HOME=/home/retcon
 USER root
-ENTRYPOINT ["/bin/bash", "-c"]
+ENTRYPOINT ["/bin/sh", "-c"]

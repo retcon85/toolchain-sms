@@ -18,15 +18,15 @@ For an example of how to set this up, please refer to the `.devcontainer` projec
 
 ## Pulling the image directly
 
-`docker pull retcon85/toolchain-sms`
+`docker pull ghcr.io/retcon85/toolchain-sms`
 
 ## Running directly as a tool wrapper
 
-`docker run --rm -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolchain-sms 'tool_command_here'`
+`docker run --rm -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container ghcr.io/retcon85/toolchain-sms 'tool_command_here'`
 
 e.g. if you want to run GNU `make build` in the current working directory, you might run:
 
-`docker run --rm -v $(pwd):/home/sms-tk/host -w /home/sms-tk/host retcon85/toolchain-sms 'make build'`
+`docker run --rm -v $(pwd):/home/sms-tk/host -w /home/sms-tk/host ghcr.io/retcon85/toolchain-sms 'make build'`
 
 ## Using a shell alias / function
 
@@ -39,7 +39,7 @@ Running native Docker commands is verbose. We recommend you set up a shell funct
 export SMS_HOME="/Users/<your_username>/<your-sms-projects-folder>/"
 function sms() {
   TMPVAR=$@;
-  docker run --rm -it -v $SMS_HOME:/home/sms-tk/host/$SMS_HOME -w /home/sms-tk/host/$(pwd) retcon85/toolchain-sms -c $TMPVAR
+  docker run --rm -it -v $SMS_HOME:/home/sms-tk/host/$SMS_HOME -w /home/sms-tk/host/$(pwd) ghcr.io/retcon85/toolchain-sms -c $TMPVAR
 }
 ```
 
@@ -51,13 +51,13 @@ We recommend setting an `SMS_HOME` or similar variable, to point to a "root" loc
 
 ## Running as an interactive shell
 
-`docker run --rm -it retcon85/toolchain-sms /bin/bash`
+`docker run --rm -it ghcr.io/retcon85/toolchain-sms /bin/bash`
 
 This will run the docker image interactively to the bash shell. You can run any of the tools from there directly.
 
 If you want access to files (likely), you will need to mount a volume, i.e.
 
-`docker run --rm -it -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container retcon85/toolchain-sms /bin/bash`
+`docker run --rm -it -v /path/to/mount/folder/on/host:/path/to/mount/folder/in/container ghcr.io/retcon85/toolchain-sms /bin/bash`
 
 We don't recommend running the image as an interactive shell, because it can get confusing, and also your shell won't have access to resources on your host environment in the same way that your host shell does.
 
@@ -65,11 +65,23 @@ We don't recommend running the image as an interactive shell, because it can get
 
 Run `./build.sh`
 
+# Image variants
+
+See [here](https://github.com/retcon85/toolchain-sms/pkgs/container/toolchain-sms) for the latest packages and tags on the Github image repository.
+
+There are currently two main variants of the image:
+- `bookworm` - based on a full distro of Debian 12 + Python
+- `slim-bookworm` - based on a slim distro of Debian 12 + Python
+
+Due to the considerably smaller size of the `slim` variant, we would recommend using that as first port of call, and only using the full image if a large number of prerequisites are found to be missing from `slim`. You can always start with a `slim` base and create your own derivative image adding only the additional prerequisites you need.
+
+As per convention, a `latest` tag is available targeting the latest "stable" version, however we strongly recommend pinning a specific version of the image to your application. The `latest` tag currently targets the full Linux base, not the `slim` version.
+
 # Contents
 
 ## Base image
 
-The base image supplies Python 3 as well as many common software development tools and libraries from the base distro.
+The base image supplies Python 3 as well as a **minimal** set of basic prerequisite tools and libraries from the base distro, including gcc, make, git, wget and curl
 
 ## WLA-DX assembler
 
@@ -151,11 +163,20 @@ Some tools have multiple versions installed.
 
 Version switching is achieved through symlinks.
 
-## Variants
-
-There is a "slim" variant of the image, which is slightly smaller in terms of image size and should work for most if not all projects. We recommend using the slim variant unless you find that it doesn't support your needs.
-
 # Changelog
+
+## v2.0
+
+- Moved primary image repository from Docker Hub to ghcr.io (Github)
+- Major changes to base image to reduce size:
+  - Removal of significant number of base dependencies only needed to build the image (clang, libffi-dev, libreadline-dev, libboost-all-dev, tcl-dev, graphviz, xdot)
+  - Removal of non-essential additional tools (nano, xxd)
+  - Miscellaneous layer optimizations
+- Latest devkitsms snapshot (`401eaded29e538c2fa3ae9be9216d58104717e9d`)
+
+## v1.1
+
+- Latest devkitsms snapshot (`8ce5a743b9709d9712e6fc28b8e9a2adae73c868`)
 
 ## v1.0
 
@@ -172,7 +193,3 @@ Possible breaking changes **in bold**.
 - Added multiple versions of SDCC (4.3, 4.4 and 4.5)
 - Moved devkitsms location from `/usr/local/...` to `/opt/devkitsms/...`
 - Latest devkitsms snapshot (`1d65541a11800aa688d8649c4a393282717e2e5f`)
-
-## v1.1
-
-- Latest devkitsms snapshot (`8ce5a743b9709d9712e6fc28b8e9a2adae73c868`)
