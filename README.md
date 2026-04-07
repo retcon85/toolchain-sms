@@ -119,11 +119,12 @@ assets2banks  folder2c  ihx2sms  makesms
 ```
 /opt/devkitsms/include:
 
-PSGlib.h  SMSlib.h
+PSGlib.h  PSGlib_extern.h  SGlib.h  SGlib_common.h  SMSlib.h
 
 /opt/devkitsms/lib:
 
-PSGlib.lib  SMSlib.lib  SMSlib_GG.lib  crt0_sms.rel  peep-rules.txt
+PSGlib.lib     PSGlib_MB.lib     SGlib.lib     SMSlib.lib     crt0_BASIC.rel  crt0_sg.rel   peep-rules.txt
+PSGlib_CV.lib  PSGlib_NOSFX.lib  SGlib_CV.lib  SMSlib_GG.lib  crt0_cv.rel     crt0_sms.rel
 ```
 
 ## SDCC
@@ -141,10 +142,12 @@ SDCC is required by [DevkitSMS](#DevkitSMS).
 ```
 /opt/sdcc/bin (included in $PATH):
 
-as2gbmap  sdar      sdas8051   sdaspdk15   sdasz80   sdcdbsrc.el  sdldgb    sdnm        ucsim_51     ucsim_m6800    ucsim_m68hc12  ucsim_pdk   ucsim_tlcs
-makebin   sdas390   sdasgb     sdasrab     sdcc      sdcpp        sdldpdk   sdobjcopy   ucsim_avr    ucsim_m6809    ucsim_mos6502  ucsim_rxk   ucsim_xa
-packihx   sdas6500  sdaspdk13  sdasstm8    sdcdb     sdld         sdldstm8  sdranlib    ucsim_f8     ucsim_m68hc08  ucsim_p1516    ucsim_st7   ucsim_z80
-s51       sdas6808  sdaspdk14  sdastlcs90  sdcdb.el  sdld6808     sdldz80   serialview  ucsim_i8085  ucsim_m68hc11  ucsim_pblaze   ucsim_stm8
+as2gbmap  sdas6500   sdaspdk15   sdcdb        sdldgb     sdranlib     ucsim_m6800    ucsim_p1516   ucsim_tlcs
+makebin   sdas6808   sdasrab     sdcdb.el     sdldpdk    serialview   ucsim_m6809    ucsim_pblaze  ucsim_xa
+packihx   sdas8051   sdasstm8    sdcdbsrc.el  sdldstm8   ucsim_51     ucsim_m68hc08  ucsim_pdk     ucsim_z80
+s51       sdasgb     sdastlcs90  sdcpp        sdldz80    ucsim_avr    ucsim_m68hc11  ucsim_rxk
+sdar      sdaspdk13  sdasz80     sdld         sdnm       ucsim_f8     ucsim_m68hc12  ucsim_st7
+sdas390   sdaspdk14  sdcc        sdld6808     sdobjcopy  ucsim_i8085  ucsim_mos6502  ucsim_stm8
 ```
 
 ### Other resources
@@ -154,16 +157,32 @@ s51       sdas6808  sdaspdk14  sdastlcs90  sdcdb.el  sdld6808     sdldz80   seri
 /opt/sdcc/share/sdcc/lib/*
 ```
 
+## zasm Z80 assembler
+
+[zasm](https://github.com/Megatokio/zasm) is a lightweight assembler for Z80, 8080, Z180 and Z80next.
+
+### Executables
+
+/usr/local/bin/zasm
+
 ## Version switching
 
 Some tools have multiple versions installed.
 
 - You can switch between versions of WLA-DX by running the `use-wla-dx` command.
 - You can switch between versions of SDCC by running the `use-sdcc` command.
+- The `use-sdcc` command will also automatically switch the versions of devkitsms library files found within the `/opt/devkitsms/lib` folder
 
-Version switching is achieved through symlinks.
+Note: version switching is achieved through symlinks.
 
 # Changelog
+
+## v3.0
+
+- Using ghrc.io/retcon85/toolchain-base as intermediate base image
+- Added [zasm Z80 assembler](https://github.com/Megatokio/zasm) as bundled tool 
+- Added missing SGlib libraries from devkitsms to image
+- Latest devkitsms snapshot (`8b99400a9b046f33fc6b03708cab880af8e334cd`)
 
 ## v2.0
 
