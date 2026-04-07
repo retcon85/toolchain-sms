@@ -177,19 +177,21 @@ Note: version switching is achieved through symlinks.
 
 # Changelog
 
+Possible breaking changes **in bold**.
+
 ## v3.0
 
-- Using ghrc.io/retcon85/toolchain-base as intermediate base image
+- **Using ghrc.io/retcon85/toolchain-base as intermediate base image**
 - Added [zasm Z80 assembler](https://github.com/Megatokio/zasm) as bundled tool 
-- Cross-compiled devkitsms libraries (SMSlib, PSGlib, crt0) now delivered as separate, switchable, binary sets associated with target SDCC versions
+- **Cross-compiled devkitsms libraries (SMSlib, PSGlib, crt0) now delivered as separate, switchable, binary sets associated with target SDCC versions**
 - Added missing SGlib libraries from devkitsms to image
 - Latest devkitsms snapshot ([8b99400a9b046f33fc6b03708cab880af8e334cd](https://github.com/sverx/devkitSMS/commit/8b99400a9b046f33fc6b03708cab880af8e334cd))
 
 ## v2.0
 
 - Moved primary image repository from Docker Hub to ghcr.io (Github)
-- Major changes to base image to reduce size:
-  - Removal of significant number of base dependencies only needed to build the image (clang, libffi-dev, libreadline-dev, libboost-all-dev, tcl-dev, graphviz, xdot)
+- **Major changes to base image to reduce size:**
+  - **Removal of significant number of base dependencies only needed to build the image (clang, libffi-dev, libreadline-dev, libboost-all-dev, tcl-dev, graphviz, xdot)**
   - Removal of non-essential additional tools (nano, xxd)
   - Miscellaneous layer optimizations
 - Latest devkitsms snapshot ([401eaded29e538c2fa3ae9be9216d58104717e9d](https://github.com/sverx/devkitSMS/commit/401eaded29e538c2fa3ae9be9216d58104717e9d))
@@ -199,8 +201,6 @@ Note: version switching is achieved through symlinks.
 - Latest devkitsms snapshot ([8ce5a743b9709d9712e6fc28b8e9a2adae73c868](https://github.com/sverx/devkitSMS/commit/8ce5a743b9709d9712e6fc28b8e9a2adae73c868))
 
 ## v1.0
-
-Possible breaking changes **in bold**.
 
 - **Added `-c` to entrypoint**
 - **Changed image user from `retcon` to `root`**
@@ -212,4 +212,4 @@ Possible breaking changes **in bold**.
 - Moved SDCC location from `/usr/local/...` to `/opt/sdcc/...`
 - Added multiple versions of SDCC (4.3, 4.4 and 4.5)
 - Moved devkitsms location from `/usr/local/...` to `/opt/devkitsms/...`
-- Latest devkitsms snapshot (`1d65541a11800aa688d8649c4a393282717e2e5f`)
+- Latest devkitsms snapshot ([1d65541a11800aa688d8649c4a393282717e2e5f](https://github.com/sverx/devkitSMS/commit/1d65541a11800aa688d8649c4a393282717e2e5f))
