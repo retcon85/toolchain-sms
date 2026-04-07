@@ -183,6 +183,7 @@ Possible breaking changes **in bold**.
 
 - **Using ghrc.io/retcon85/toolchain-base as intermediate base image**
 - Added [zasm Z80 assembler](https://github.com/Megatokio/zasm) as bundled tool 
+- **Changed default shell from bash to dash**
 - **Cross-compiled devkitsms libraries (SMSlib, PSGlib, crt0) now delivered as separate, switchable, binary sets associated with target SDCC versions**
 - Added missing SGlib libraries from devkitsms to image
 - Latest devkitsms snapshot ([8b99400a9b046f33fc6b03708cab880af8e334cd](https://github.com/sverx/devkitSMS/commit/8b99400a9b046f33fc6b03708cab880af8e334cd))
